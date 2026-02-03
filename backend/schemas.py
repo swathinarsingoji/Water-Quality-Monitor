@@ -1,32 +1,63 @@
 from pydantic import BaseModel, EmailStr
 from enum import Enum
+from typing import Optional
+from datetime import datetime
+
 
 class UserRole(str, Enum):
-    citizen = "citizen"
-    ngo = "ngo"
+    user = "user"
     authority = "authority"
-    admin = "admin"
+
 
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
-    role: UserRole = UserRole.citizen
-    location: str | None = None
+    role: UserRole = UserRole.user
+
 
 class UserResponse(BaseModel):
     id: int
     name: str
     email: EmailStr
     role: UserRole
-    location: str | None
 
     class Config:
         from_attributes = True
+
+
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class ReportStatus(str, Enum):
+    pending = "pending"
+    verified = "verified"
+    rejected = "rejected"
+
+
+class ReportCreate(BaseModel):
+    location: str
+    description: str
+    water_source: str
+    photo_url: Optional[str] = None
+
+
+class ReportResponse(BaseModel):
+    id: int
+    user_id: int
+    location: str
+    description: str
+    water_source: str
+    photo_url: Optional[str]
+    status: ReportStatus
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
