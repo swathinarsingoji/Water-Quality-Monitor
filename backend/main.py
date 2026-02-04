@@ -30,6 +30,7 @@ def test_db():
     finally:
         db.close()
 
+
 app.include_router(auth_router)
 app.include_router(reports_router, prefix="/reports")
 app.include_router(stations_router, prefix="/stations")
