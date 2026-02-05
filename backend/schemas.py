@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from enum import Enum
+
 from typing import Optional
 from datetime import datetime
 
@@ -9,10 +10,12 @@ class UserRole(str, Enum):
     authority = "authority"
 
 
+
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
+
     role: UserRole = UserRole.user
 
 
@@ -22,13 +25,16 @@ class UserResponse(BaseModel):
     email: EmailStr
     role: UserRole
 
+
     class Config:
         from_attributes = True
+
 
 
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+
 
 
 class Token(BaseModel):
