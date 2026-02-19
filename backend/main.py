@@ -1,5 +1,11 @@
 from fastapi import FastAPI
+
 from fastapi.middleware.cors import CORSMiddleware
+
+
+from fastapi.middleware.cors import CORSMiddleware
+
+
 from sqlalchemy import text
 
 from database import SessionLocal, engine
@@ -14,11 +20,16 @@ from routers.stations import router as stations_router
 from routers.alerts import router as alerts_router
 
 
+from routers.reports import router as reports_router
+from routers.stations import router as stations_router
+
 app = FastAPI(title="Water Quality Monitor")
 
 
 
+
 Base.metadata.create_all(bind=engine)
+
 
 
 app.add_middleware(
@@ -45,7 +56,14 @@ def test_db():
         db.close()
 
 
+
 app.include_router(auth_router)
 app.include_router(reports_router, prefix="/reports")
 app.include_router(stations_router, prefix="/stations")
 app.include_router(alerts_router, prefix="/alerts")
+
+
+app.include_router(auth_router)
+app.include_router(reports_router, prefix="/reports")
+app.include_router(stations_router, prefix="/stations")
+

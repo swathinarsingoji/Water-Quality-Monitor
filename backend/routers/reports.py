@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from database import get_db
-from models import Report, Alert, UserRole
+from models import Report, UserRole
 from schemas import ReportCreate, ReportResponse, ReportStatus
-from routers.dependencies import require_roles, get_current_user
+from routers.dependencies import get_current_user, require_roles
 
 router = APIRouter()
 
@@ -13,17 +13,10 @@ router = APIRouter()
 def create_report(
     report: ReportCreate,
     db: Session = Depends(get_db),
-    user=Depends(require_roles([UserRole.citizen, UserRole.ngo])),
+    user=Depends(get_current_user),
 ):
-    # If alert_id provided, verify it exists
-    if report.alert_id:
-        alert = db.query(Alert).filter(Alert.id == report.alert_id).first()
-        if not alert:
-            raise HTTPException(status_code=400, detail="Invalid alert_id")
-
     new_report = Report(
         user_id=user.id,
-        alert_id=report.alert_id,
         location=report.location,
         description=report.description,
         water_source=report.water_source,

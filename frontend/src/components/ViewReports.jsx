@@ -11,7 +11,6 @@ function ViewReports() {
     try {
       if (!token) return;
 
-      
       const endpoint =
         role === "authority" || role === "admin"
           ? `${API}/reports/`
@@ -26,7 +25,6 @@ function ViewReports() {
       if (!res.ok) throw new Error("Unauthorized");
 
       const data = await res.json();
-
       setReports(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error fetching reports:", err);
@@ -83,7 +81,6 @@ function ViewReports() {
           <p><strong>Water Source:</strong> {report.water_source}</p>
           <p><strong>Status:</strong> {report.status}</p>
 
-          {/* Only authority can verify */}
           {role === "authority" && report.status === "pending" && (
             <>
               <button onClick={() => updateStatus(report.id, "verified")}>

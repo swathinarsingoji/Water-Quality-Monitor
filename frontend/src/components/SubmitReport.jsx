@@ -56,7 +56,6 @@ function SubmitReport({ alertId, onBack }) {
         photo_url: "",
         status: "pending",
       });
-
     } catch (err) {
       alert(err.message);
     } finally {

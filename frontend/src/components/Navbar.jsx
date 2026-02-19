@@ -1,5 +1,11 @@
 function Navbar({ onNavigate, onLogout }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  let user = null;
+
+  try {
+    user = JSON.parse(localStorage.getItem("user"));
+  } catch (error) {
+    user = null;
+  }
 
   return (
     <div style={navStyle}>
@@ -46,7 +52,7 @@ function Navbar({ onNavigate, onLogout }) {
 
       <div style={{ display: "flex", alignItems: "center" }}>
         <span style={{ color: "white", marginRight: "15px" }}>
-          {user?.name} ({user?.role})
+          {user?.name || "User"} ({user?.role || "role"})
         </span>
 
         <button style={logoutStyle} onClick={onLogout}>

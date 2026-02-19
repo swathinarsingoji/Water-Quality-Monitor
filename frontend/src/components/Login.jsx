@@ -10,7 +10,9 @@ function Login({ onLogin }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [role, setRole] = useState("citizen");
+
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -46,6 +48,7 @@ function Login({ onLogin }) {
 
         onLogin();
         navigate("/");
+
       } else {
         const res = await fetch(`${API}/register`, {
           method: "POST",

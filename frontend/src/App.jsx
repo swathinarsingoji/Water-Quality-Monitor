@@ -4,11 +4,9 @@ import Navbar from "./components/Navbar";
 import SubmitReport from "./components/SubmitReport";
 import ViewReports from "./components/ViewReports";
 import Login from "./components/Login";
-
 import Alerts from "./components/Alerts";
-import CreateReportFromAlert from "./components/CreateReport";
 import StationReadings from "./components/StationReadings";
-import StationForm from "./components/StationForm";   // ✅ added
+import StationForm from "./components/StationForm";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -36,7 +34,7 @@ function App() {
       <Navbar onNavigate={setPage} onLogout={handleLogout} />
 
       {page === "map" && <StationMap />}
-      {page === "stations" && <StationForm />}   {/* ✅ added */}
+      {page === "stations" && <StationForm />}
       {page === "report" && <SubmitReport />}
       {page === "view" && <ViewReports />}
 
