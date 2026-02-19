@@ -8,32 +8,51 @@ function Navbar({ onNavigate, onLogout }) {
           Station Map
         </button>
 
-        {user?.role === "user" && (
+        <button style={btnStyle} onClick={() => onNavigate("alerts")}>
+          Alerts
+        </button>
+
+        <button style={btnStyle} onClick={() => onNavigate("readings")}>
+          Charts
+        </button>
+
+        {/* Admin Only */}
+        {user?.role === "admin" && (
+          <button style={btnStyle} onClick={() => onNavigate("stations")}>
+            Manage Stations
+          </button>
+        )}
+
+        {/* Citizen & NGO */}
+        {(user?.role === "citizen" || user?.role === "ngo") && (
           <>
             <button style={btnStyle} onClick={() => onNavigate("report")}>
               Submit Report
             </button>
+
             <button style={btnStyle} onClick={() => onNavigate("view")}>
-              View Reports
+              My Reports
             </button>
           </>
         )}
 
+        {/* Authority */}
         {user?.role === "authority" && (
-          <>
-            <button style={btnStyle} onClick={() => onNavigate("view")}>
-              All Reports
-            </button>
-            <button style={btnStyle} onClick={() => onNavigate("verify")}>
-              Verify Reports
-            </button>
-          </>
+          <button style={btnStyle} onClick={() => onNavigate("view")}>
+            All Reports
+          </button>
         )}
       </div>
 
-      <button style={logoutStyle} onClick={onLogout}>
-        Logout
-      </button>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <span style={{ color: "white", marginRight: "15px" }}>
+          {user?.name} ({user?.role})
+        </span>
+
+        <button style={logoutStyle} onClick={onLogout}>
+          Logout
+        </button>
+      </div>
     </div>
   );
 }
@@ -42,7 +61,7 @@ const navStyle = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: "10px 20px",
+  padding: "12px 20px",
   background: "#020617",
 };
 
@@ -65,4 +84,4 @@ const logoutStyle = {
   cursor: "pointer",
 };
 
-export default Navbar;  
+export default Navbar;

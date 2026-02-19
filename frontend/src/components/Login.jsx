@@ -10,7 +10,7 @@ function Login({ onLogin }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState("citizen");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -25,9 +25,10 @@ function Login({ onLogin }) {
           body: JSON.stringify({ email, password }),
         });
 
-        if (!res.ok) throw new Error("Invalid credentials");
+        if (!res.ok) throw new Error("Invalid email or password");
 
         const data = await res.json();
+
         localStorage.setItem("token", data.access_token);
 
         const meRes = await fetch(`${API}/me`, {
@@ -39,15 +40,12 @@ function Login({ onLogin }) {
         if (!meRes.ok) throw new Error("Failed to fetch user");
 
         const user = await meRes.json();
-        localStorage.setItem("user", JSON.stringify(user));
 
-        if (user.role === "authority") {
-          navigate("/authority-dashboard");
-        } else {
-          navigate("/user-dashboard");
-        }
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("role", user.role);
 
         onLogin();
+        navigate("/");
       } else {
         const res = await fetch(`${API}/register`, {
           method: "POST",
@@ -83,6 +81,7 @@ function Login({ onLogin }) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 style={inputStyle}
+                required
               />
 
               <select
@@ -90,8 +89,10 @@ function Login({ onLogin }) {
                 onChange={(e) => setRole(e.target.value)}
                 style={inputStyle}
               >
-                <option value="user">User</option>
+                <option value="citizen">Citizen</option>
+                <option value="ngo">NGO</option>
                 <option value="authority">Authority</option>
+                <option value="admin">Admin</option>
               </select>
             </>
           )}
@@ -101,6 +102,7 @@ function Login({ onLogin }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             style={inputStyle}
+            required
           />
 
           <input
@@ -109,6 +111,7 @@ function Login({ onLogin }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             style={inputStyle}
+            required
           />
 
           {error && <p style={{ color: "red" }}>{error}</p>}

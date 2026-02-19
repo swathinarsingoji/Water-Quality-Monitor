@@ -1,15 +1,14 @@
-
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Enum
-
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Enum, Float
 from sqlalchemy.sql import func
 from database import Base
 import enum
 
 
-
 class UserRole(enum.Enum):
-    user = "user"
+    citizen = "citizen"
+    ngo = "ngo"
     authority = "authority"
+    admin = "admin"
 
 
 class User(Base):
@@ -19,8 +18,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
-
-    role = Column(Enum(UserRole), default=UserRole.user, nullable=False)
+    role = Column(Enum(UserRole), default=UserRole.citizen, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -35,6 +33,7 @@ class Report(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    alert_id = Column(Integer, ForeignKey("alerts.id"), nullable=True)
     photo_url = Column(String, nullable=True)
     location = Column(String, nullable=False)
     description = Column(Text, nullable=False)
@@ -60,5 +59,17 @@ class StationReading(Base):
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("water_stations.id"), nullable=False)
     parameter = Column(String, nullable=False)
-    value = Column(String, nullable=False)
+    value = Column(Float, nullable=False)
     recorded_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Alert(Base):
+    __tablename__ = "alerts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    station_id = Column(Integer, ForeignKey("water_stations.id"), nullable=False)
+    parameter = Column(String, nullable=False)
+    value = Column(Float, nullable=False)
+    threshold = Column(Float, nullable=False)
+    message = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
