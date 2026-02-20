@@ -10,6 +10,10 @@ function Navbar({ onNavigate, onLogout }) {
   return (
     <div style={navStyle}>
       <div>
+        <button style={btnStyle} onClick={() => onNavigate("dashboard")}>
+          Dashboard
+        </button>
+
         <button style={btnStyle} onClick={() => onNavigate("map")}>
           Station Map
         </button>
@@ -22,14 +26,12 @@ function Navbar({ onNavigate, onLogout }) {
           Charts
         </button>
 
-        {/* Admin Only */}
         {user?.role === "admin" && (
           <button style={btnStyle} onClick={() => onNavigate("stations")}>
             Manage Stations
           </button>
         )}
 
-        {/* Citizen & NGO */}
         {(user?.role === "citizen" || user?.role === "ngo") && (
           <>
             <button style={btnStyle} onClick={() => onNavigate("report")}>
@@ -42,7 +44,24 @@ function Navbar({ onNavigate, onLogout }) {
           </>
         )}
 
-        {/* Authority */}
+        {user?.role === "ngo" && (
+          <>
+            <button
+              style={btnStyle}
+              onClick={() => onNavigate("ngo-projects")}
+            >
+              My Projects
+            </button>
+
+            <button
+              style={btnStyle}
+              onClick={() => onNavigate("create-ngo-project")}
+            >
+              Publish Project
+            </button>
+          </>
+        )}
+
         {user?.role === "authority" && (
           <button style={btnStyle} onClick={() => onNavigate("view")}>
             All Reports
