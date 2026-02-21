@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function SubmitReport() {
+function SubmitReport({ alertId, onBack }) {
   const [form, setForm] = useState({
     location: "",
     description: "",
@@ -33,7 +33,10 @@ function SubmitReport() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          alert_id: alertId || null,
+        }),
       });
 
       const data = await response.json();
@@ -43,6 +46,8 @@ function SubmitReport() {
       }
 
       alert("Report submitted successfully!");
+
+      if (onBack) onBack();
 
       setForm({
         location: "",

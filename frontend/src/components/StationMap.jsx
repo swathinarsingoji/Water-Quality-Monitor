@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import axios from "axios";
 import "leaflet/dist/leaflet.css";
 
 const API = "http://127.0.0.1:8000";
@@ -8,10 +9,25 @@ function StationMap() {
   const [stations, setStations] = useState([]);
 
   useEffect(() => {
-    fetch(`${API}/stations/`)
-      .then((res) => res.json())
-      .then((data) => setStations(data))
-      .catch((err) => console.error("Failed to load stations", err));
+    const fetchStations = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const res = await axios.get(`${API}/stations/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setStations(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error("Failed to load stations", err);
+        setStations([]);
+      }
+    };
+
+    fetchStations();
   }, []);
 
   return (
@@ -44,18 +60,22 @@ function StationMap() {
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-          {stations.map((station) => (
-            <Marker
-              key={station.id}
-              position={[station.latitude, station.longitude]}
-            >
-              <Popup>
-                <strong>{station.name}</strong>
-                <br />
-                Location: {station.location}
-              </Popup>
-            </Marker>
-          ))}
+          {Array.isArray(stations) &&
+            stations.map((station) => (
+              <Marker
+                key={station.id}
+                position={[
+                  Number(station.latitude),
+                  Number(station.longitude),
+                ]}
+              >
+                <Popup>
+                  <strong>{station.name}</strong>
+                  <br />
+                  Location: {station.location}
+                </Popup>
+              </Marker>
+            ))}
         </MapContainer>
       </div>
     </div>

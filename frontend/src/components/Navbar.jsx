@@ -1,39 +1,83 @@
 function Navbar({ onNavigate, onLogout }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  let user = null;
+
+  try {
+    user = JSON.parse(localStorage.getItem("user"));
+  } catch (error) {
+    user = null;
+  }
 
   return (
     <div style={navStyle}>
       <div>
+        <button style={btnStyle} onClick={() => onNavigate("dashboard")}>
+          Dashboard
+        </button>
+
         <button style={btnStyle} onClick={() => onNavigate("map")}>
           Station Map
         </button>
 
-        {user?.role === "user" && (
+        <button style={btnStyle} onClick={() => onNavigate("alerts")}>
+          Alerts
+        </button>
+
+        <button style={btnStyle} onClick={() => onNavigate("readings")}>
+          Charts
+        </button>
+
+        {user?.role === "admin" && (
+          <button style={btnStyle} onClick={() => onNavigate("stations")}>
+            Manage Stations
+          </button>
+        )}
+
+        {(user?.role === "citizen" || user?.role === "ngo") && (
           <>
             <button style={btnStyle} onClick={() => onNavigate("report")}>
               Submit Report
             </button>
+
             <button style={btnStyle} onClick={() => onNavigate("view")}>
-              View Reports
+              My Reports
+            </button>
+          </>
+        )}
+
+        {user?.role === "ngo" && (
+          <>
+            <button
+              style={btnStyle}
+              onClick={() => onNavigate("ngo-projects")}
+            >
+              My Projects
+            </button>
+
+            <button
+              style={btnStyle}
+              onClick={() => onNavigate("create-ngo-project")}
+            >
+              Publish Project
             </button>
           </>
         )}
 
         {user?.role === "authority" && (
-          <>
-            <button style={btnStyle} onClick={() => onNavigate("view")}>
-              All Reports
-            </button>
-            <button style={btnStyle} onClick={() => onNavigate("verify")}>
-              Verify Reports
-            </button>
-          </>
+          <button style={btnStyle} onClick={() => onNavigate("view")}>
+            All Reports
+          </button>
         )}
       </div>
 
-      <button style={logoutStyle} onClick={onLogout}>
-        Logout
-      </button>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <span style={{ color: "white", marginRight: "15px" }}>
+          {user?.name || "User"} ({user?.role || "role"})
+        </span>
+
+        <button style={logoutStyle} onClick={onLogout}>
+          Logout
+        </button>
+      </div>
     </div>
   );
 }
@@ -42,7 +86,7 @@ const navStyle = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: "10px 20px",
+  padding: "12px 20px",
   background: "#020617",
 };
 
@@ -65,4 +109,4 @@ const logoutStyle = {
   cursor: "pointer",
 };
 
-export default Navbar;  
+export default Navbar;

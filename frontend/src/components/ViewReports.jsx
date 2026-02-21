@@ -5,15 +5,31 @@ const API = "http://127.0.0.1:8000";
 function ViewReports() {
   const [reports, setReports] = useState([]);
   const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
   const fetchReports = async () => {
-    const res = await fetch(`${API}/reports/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    setReports(data);
+    try {
+      if (!token) return;
+
+      const endpoint =
+        role === "authority" || role === "admin"
+          ? `${API}/reports/`
+          : `${API}/reports/me`;
+
+      const res = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Unauthorized");
+
+      const data = await res.json();
+      setReports(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error fetching reports:", err);
+      setReports([]);
+    }
   };
 
   useEffect(() => {
@@ -42,7 +58,13 @@ function ViewReports() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>All Submitted Reports</h2>
+      <h2>
+        {role === "authority" || role === "admin"
+          ? "All Submitted Reports"
+          : "My Reports"}
+      </h2>
+
+      {reports.length === 0 && <p>No reports available</p>}
 
       {reports.map((report) => (
         <div
@@ -59,7 +81,7 @@ function ViewReports() {
           <p><strong>Water Source:</strong> {report.water_source}</p>
           <p><strong>Status:</strong> {report.status}</p>
 
-          {report.status === "pending" && (
+          {role === "authority" && report.status === "pending" && (
             <>
               <button onClick={() => updateStatus(report.id, "verified")}>
                 Verify
