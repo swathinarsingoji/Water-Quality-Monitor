@@ -34,7 +34,7 @@ function StationReadings() {
 
       if (!token) return;
 
-      const res = await axios.get(`${API}/stations/`, {
+      const res = await axios.get(`${API_BASE_URL}/stations/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,7 +57,7 @@ function StationReadings() {
       if (!token) return;
 
       const res = await axios.get(
-        `${API}/stations/${stationId}/readings`,
+        `${API_BASE_URL}/stations/${stationId}/readings`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
