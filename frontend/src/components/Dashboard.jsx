@@ -12,8 +12,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-
-const API = "http://127.0.0.1:8000";
+import API_BASE_URL from "../config";
 
 function Dashboard() {
   const [data, setData] = useState(null);
@@ -22,7 +21,7 @@ function Dashboard() {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`${API}/dashboard-data`, {
+      .get(`${API_BASE_URL}/dashboard-data`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setData(res.data))

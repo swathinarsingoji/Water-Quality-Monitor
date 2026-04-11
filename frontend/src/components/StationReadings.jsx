@@ -10,14 +10,13 @@ import {
   Legend,
   ReferenceLine,
 } from "recharts";
+import API_BASE_URL from "../config";
 
 function StationReadings() {
   const [stations, setStations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
   const [selectedParameter, setSelectedParameter] = useState("pH");
   const [data, setData] = useState([]);
-
-  const API = "http://localhost:8000";
 
   useEffect(() => {
     fetchStations();

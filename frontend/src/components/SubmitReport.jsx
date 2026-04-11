@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API_BASE_URL from "../config";
 
 function SubmitReport({ alertId, onBack }) {
   const [form, setForm] = useState({
@@ -27,7 +28,7 @@ function SubmitReport({ alertId, onBack }) {
     try {
       setLoading(true);
 
-      const response = await fetch("http://127.0.0.1:8000/reports/", {
+      const response = await fetch(`${API_BASE_URL}/reports/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

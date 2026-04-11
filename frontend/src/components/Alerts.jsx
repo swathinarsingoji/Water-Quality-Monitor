@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config";
 
 function Alerts({ onCreateReport }) {
   const [alerts, setAlerts] = useState([]);
@@ -12,7 +13,7 @@ function Alerts({ onCreateReport }) {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("http://localhost:8000/alerts/", {
+      const res = await axios.get(`${API_BASE_URL}/alerts/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

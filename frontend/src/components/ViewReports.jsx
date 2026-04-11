@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-const API = "http://127.0.0.1:8000";
+import API_BASE_URL from "../config";
 
 function ViewReports() {
   const [reports, setReports] = useState([]);
@@ -13,8 +12,8 @@ function ViewReports() {
 
       const endpoint =
         role === "authority" || role === "admin"
-          ? `${API}/reports/`
-          : `${API}/reports/me`;
+          ? `${API_BASE_URL}/reports/`
+          : `${API_BASE_URL}/reports/me`;
 
       const res = await fetch(endpoint, {
         headers: {
@@ -39,7 +38,7 @@ function ViewReports() {
   const updateStatus = async (id, status) => {
     try {
       const res = await fetch(
-        `${API}/reports/${id}/status?status=${status}`,
+        `${API_BASE_URL}/reports/${id}/status?status=${status}`,
         {
           method: "PUT",
           headers: {

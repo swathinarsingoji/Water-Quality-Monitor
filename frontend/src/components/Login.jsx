@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const API = "http://127.0.0.1:8000";
+import API_BASE_URL from "../config";
 
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -21,7 +20,7 @@ function Login({ onLogin }) {
 
     try {
       if (mode === "login") {
-        const res = await fetch(`${API}/login`, {
+        const res = await fetch(`${API_BASE_URL}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -33,7 +32,7 @@ function Login({ onLogin }) {
 
         localStorage.setItem("token", data.access_token);
 
-        const meRes = await fetch(`${API}/me`, {
+        const meRes = await fetch(`${API_BASE_URL}/me`, {
           headers: {
             Authorization: `Bearer ${data.access_token}`,
           },
@@ -50,7 +49,7 @@ function Login({ onLogin }) {
         navigate("/");
 
       } else {
-        const res = await fetch(`${API}/register`, {
+        const res = await fetch(`${API_BASE_URL}/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
@@ -13,15 +12,7 @@ from schemas import (
 )
 from routers.dependencies import require_roles, get_current_user
 
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-
-from database import get_db
-from models import WaterStation, StationReading
-
-
 router = APIRouter()
-
 
 
 @router.get("/", response_model=list[StationResponse])
@@ -86,7 +77,6 @@ def add_station_reading(
     threshold = thresholds.get(reading.parameter)
 
     if threshold and reading.value > threshold:
-
         one_hour_ago = datetime.now(timezone.utc) - timedelta(hours=1)
 
         existing_alert = db.query(Alert).filter(
@@ -121,30 +111,3 @@ def get_station_readings(
         .order_by(StationReading.recorded_at.asc())
         .all()
     )
-
-@router.get("/")
-def get_stations(db: Session = Depends(get_db)):
-    return db.query(WaterStation).all()
-
-
-@router.post("/", status_code=201)
-def create_station(station: dict, db: Session = Depends(get_db)):
-    new_station = WaterStation(
-        name=station["name"],
-        location=station["location"],
-        latitude=station["latitude"],
-        longitude=station["longitude"],
-        managed_by=station.get("managed_by"),
-    )
-    db.add(new_station)
-    db.commit()
-    db.refresh(new_station)
-    return new_station
-
-
-@router.get("/{station_id}/readings")
-def get_station_readings(station_id: int, db: Session = Depends(get_db)):
-    return db.query(StationReading).filter(
-        StationReading.station_id == station_id
-    ).all()
-

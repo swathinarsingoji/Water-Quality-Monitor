@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
-const API = "http://127.0.0.1:8000";
+import API_BASE_URL from "../config";
 
 function CreateNgoProject() {
   const [formData, setFormData] = useState({
@@ -17,7 +16,7 @@ function CreateNgoProject() {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
-    await axios.post(`${API}/ngo-project`, formData, {
+    await axios.post(`${API_BASE_URL}/ngo-project`, formData, {
       headers: { Authorization: `Bearer ${token}` }
     });
 

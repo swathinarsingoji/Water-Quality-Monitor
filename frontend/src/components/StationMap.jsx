@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axios from "axios";
 import "leaflet/dist/leaflet.css";
-
-const API = "http://127.0.0.1:8000";
+import API_BASE_URL from "../config";
 
 function StationMap() {
   const [stations, setStations] = useState([]);
@@ -14,7 +13,7 @@ function StationMap() {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        const res = await axios.get(`${API}/stations/`, {
+        const res = await axios.get(`${API_BASE_URL}/stations/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

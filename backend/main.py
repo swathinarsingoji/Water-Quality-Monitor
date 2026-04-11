@@ -18,7 +18,11 @@ Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",  # Development
+        "https://water-quality-monitor.vercel.app",  # Production frontend
+        "*"  # Allow all origins for now, restrict later
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config";
 
 function CreateReportFromAlert({ alertId, onBack }) {
   const [location, setLocation] = useState("");
@@ -7,7 +8,7 @@ function CreateReportFromAlert({ alertId, onBack }) {
   const [waterSource, setWaterSource] = useState("");
 
   const submitReport = async () => {
-    await axios.post("http://localhost:8000/reports/", {
+    await axios.post(`${API_BASE_URL}/reports/`, {
       location,
       description,
       water_source: waterSource,

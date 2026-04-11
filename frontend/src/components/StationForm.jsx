@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config";
 
 function StationForm() {
   const [stations, setStations] = useState([]);
@@ -19,7 +20,7 @@ function StationForm() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("http://localhost:8000/stations/", {
+      const res = await axios.get(`${API_BASE_URL}/stations/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,7 +46,7 @@ function StationForm() {
       }
 
       await axios.post(
-        "http://localhost:8000/stations/",
+        `${API_BASE_URL}/stations/`,
         {
           ...formData,
           latitude: String(formData.latitude),
