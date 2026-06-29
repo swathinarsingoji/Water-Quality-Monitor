@@ -16,6 +16,6 @@
     }
   ],
   "env": {
-    "VITE_API_BASE_URL": "@vite-api-base-url"
+    "VITE_API_BASE_URL": "https://water-quality-monitor-1-ysrd.onrender.com"
   }
 }
